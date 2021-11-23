@@ -1,11 +1,14 @@
 import auth from '@react-native-firebase/auth';
+import {firebase} from '@react-native-firebase/firestore';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import ContextWrapper from './context/ContextWrapper';
+import Home from './screens/Home';
 import Profile from './screens/Profile';
 import SignIn from './screens/SignIn';
 const Stack = createNativeStackNavigator();
+export const db = firebase.firestore();
 
 const App = () => {
   // Set an initializing state whilst Firebase connects
@@ -15,7 +18,9 @@ const App = () => {
   // Handle user state changes
   function onAuthStateChanged(currentUser) {
     setUser(currentUser);
-    if (initializing) setInitializing(false);
+    if (initializing) {
+      setInitializing(false);
+    }
   }
 
   useEffect(() => {
@@ -24,7 +29,9 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (initializing) return null;
+  if (initializing) {
+    return null;
+  }
 
   return (
     <ContextWrapper>
@@ -36,6 +43,7 @@ const App = () => {
         ) : (
           <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="PROFILE" component={Profile} />
+            <Stack.Screen name="HOME" component={Home} />
           </Stack.Navigator>
         )}
       </NavigationContainer>

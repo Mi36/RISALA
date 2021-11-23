@@ -1,27 +1,19 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Button,
-} from 'react-native';
-//import Constants from 'expo-constants';
-import GlobalContext from '../context/Context';
+import {firebase} from '@react-native-firebase/auth';
 //import {MaterialCommunityIcons} from '@expo/vector-icons';
 //import {pickImage, askForPermission, uploadImage} from '../utils';
 //import {auth, db} from '../firebase';
 //import {updateProfile} from '@firebase/auth';
 //import {doc, setDoc} from '@firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {Button, Text, TextInput, View} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
 export default function Profile() {
   const [displayName, setDisplayName] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [permissionStatus, setPermissionStatus] = useState(null);
   const navigation = useNavigation();
+  console.log(auth().currentUser._user.email);
   useEffect(() => {
     (async () => {
       //  const status = await askForPermission();
@@ -34,44 +26,27 @@ export default function Profile() {
   //   } = useContext(GlobalContext);
 
   async function handlePress() {
-    const user = auth.currentUser;
-    let photoURL;
-    // if (selectedImage) {
-    //   const {url} = await uploadImage(
-    //     selectedImage,
-    //     `images/${user.uid}`,
-    //     'profilePicture',
-    //   );
-    //   photoURL = url;
-    // }
-    const userData = {
+    const update = {
       displayName,
-      email: user.email,
+      photoURL: '',
     };
-    if (photoURL) {
-      userData.photoURL = photoURL;
+    try {
+      await Promise.all([
+        firebase.auth().currentUser.updateProfile(update),
+        //Using the add method will automatically set a random unique doc ID.
+        //If you want to set a doc ID explicitly, you can use the set method instead
+        firestore().collection('users').add({
+          displayName,
+          email: auth().currentUser._user.email,
+        }),
+      ]);
+      navigation.navigate('HOME');
+    } catch (e) {
+      console.log(e);
+      console.log('display name update error');
     }
-
-    await Promise.all([
-      //  updateProfile(user, userData),
-      //setDoc(doc(db, 'users', user.uid), {...userData, uid: user.uid}),
-    ]);
-    navigation.navigate('home');
   }
 
-  async function handleProfilePicture() {
-    // const result = await pickImage();
-    // if (!result.cancelled) {
-    //   setSelectedImage(result.uri);
-    // }
-  }
-
-  //   if (!permissionStatus) {
-  //     return <Text>Loading</Text>;
-  //   }
-  //   if (permissionStatus !== 'granted') {
-  //     return <Text>You need to allow this permission</Text>;
-  //   }
   return (
     <React.Fragment>
       <View
@@ -86,30 +61,6 @@ export default function Profile() {
         <Text style={{fontSize: 14, color: 'black', marginTop: 20}}>
           Please provide your name and an optional profile photo
         </Text>
-        <TouchableOpacity
-          onPress={handleProfilePicture}
-          style={{
-            marginTop: 30,
-            borderRadius: 120,
-            width: 120,
-            height: 120,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text>hjdgdhjg</Text>
-          {/* {!selectedImage ? (
-            <MaterialCommunityIcons
-              name="camera-plus"
-              color={colors.iconGray}
-              size={45}
-            />
-          ) : (
-            <Image
-              source={{uri: selectedImage}}
-              style={{width: '100%', height: '100%', borderRadius: 120}}
-            />
-          )} */}
-        </TouchableOpacity>
         <TextInput
           placeholder="Type your name"
           value={displayName}
