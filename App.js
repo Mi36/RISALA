@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import ContextWrapper from './context/ContextWrapper';
+import Chats from './screens/Chats';
 import Home from './screens/Home';
 import Profile from './screens/Profile';
 import SignIn from './screens/SignIn';
@@ -43,7 +44,7 @@ const App = () => {
         ) : (
           <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="PROFILE" component={Profile} />
-            <Stack.Screen name="HOME" component={Home} />
+            <Stack.Screen name="CHATS" component={Chats} />
           </Stack.Navigator>
         )}
       </NavigationContainer>

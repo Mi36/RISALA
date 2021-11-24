@@ -40,7 +40,7 @@ export default function Profile() {
           email: auth().currentUser._user.email,
         }),
       ]);
-      navigation.navigate('HOME');
+      navigation.navigate('CHATS');
     } catch (e) {
       console.log(e);
       console.log('display name update error');
