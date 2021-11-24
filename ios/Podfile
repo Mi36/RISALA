@@ -5,6 +5,8 @@ platform :ios, '11.0'
 
 target 'RISALA' do
   config = use_native_modules!
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts"
 
   use_react_native!(
     :path => config[:reactNativePath],
