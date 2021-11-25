@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import ContextWrapper from './context/ContextWrapper';
 import Chats from './screens/Chats';
+import Contacts from './screens/Contacts';
 import Home from './screens/Home';
 import Profile from './screens/Profile';
 import SignIn from './screens/SignIn';
@@ -43,6 +44,7 @@ const App = () => {
           </Stack.Navigator>
         ) : (
           <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="CONTACTS" component={Contacts} />
             <Stack.Screen name="PROFILE" component={Profile} />
             <Stack.Screen name="CHATS" component={Chats} />
           </Stack.Navigator>

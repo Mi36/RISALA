@@ -9,11 +9,13 @@ const Chats = () => {
     const unsubscribe = firestore()
       .collection('rooms')
       .onSnapshot(querySnapshot => {
+        // we can use filter here
         const parsedChats = querySnapshot.docs.map(documentSnapshot => {
           return {
             _id: documentSnapshot.id,
             name: '',
             ...documentSnapshot.data(),
+            //userB: doc.data().participant.find((p)=>p.email===currentUser.email)
           };
         });
 
